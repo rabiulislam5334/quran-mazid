@@ -33,7 +33,7 @@ export interface SearchResult {
 }
 
 export interface FontSettings {
-  arabicFont: "uthmani" | "amiri" | "scheherazade";
+  arabicFont: ArabicFont;
   arabicFontSize: number;
   translationFontSize: number;
 }
