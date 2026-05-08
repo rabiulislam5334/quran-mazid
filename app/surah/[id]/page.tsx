@@ -10,6 +10,8 @@ import { SearchModal } from "@/app/components/search/SearchModal";
 import { FontSettingsPanel } from "@/app/components/settings/FontSettingsPanel";
 import { SurahHeader } from "@/app/components/surah/SurahHeader";
 import { BottomPlayer } from "@/app/components/audio/BottomPlayer";
+import { IconSidebar } from "@/app/components/layout/IconSidebar";
+import { MobileHeader } from "@/app/components/layout/MobileHeader";
 // import { fetchSurahAyahs, fetchAllSurahs } from "@/lib/api";
 // import { IconSidebar }      from "@/components/layout/IconSidebar";
 // import { SurahSidebar }     from "@/components/layout/SurahSidebar";
