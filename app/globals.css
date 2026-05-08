@@ -1,26 +1,188 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-primary: #0f1117;
+  --bg-secondary: #161b27;
+  --bg-tertiary: #1e2436;
+  --gold: #c9a84c;
+  --gold-light: #e2c37a;
+  --text-primary: #e8e8e8;
+  --text-secondary: #a0a8b8;
+  --border: #252d42;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* Arabic text rendering */
+.arabic-text {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  line-height: 2.5;
+  letter-spacing: 0.02em;
+}
+
+/* Surah divider */
+.bismillah {
+  font-family: 'KFGQPC Uthmanic Script', 'Scheherazade New', serif;
+  direction: rtl;
+  text-align: center;
+  font-size: 2rem;
+  color: var(--gold-light);
+  padding: 1.5rem;
+  line-height: 2;
+}
+
+/* Gold gradient text */
+.gold-text {
+  background: linear-gradient(135deg, #c9a84c, #e2c37a, #c9a84c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Verse number badge */
+.verse-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e2a42, #2a3655);
+  border: 1px solid var(--gold);
+  color: var(--gold-light);
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Sidebar transitions */
+.sidebar-enter {
+  transform: translateX(-100%);
+}
+
+.sidebar-enter-active {
+  transform: translateX(0);
+  transition: transform 0.3s ease-out;
+}
+
+/* Highlight search matches */
+.search-highlight {
+  background: rgba(201, 168, 76, 0.3);
+  color: var(--gold-light);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* Audio progress bar */
+.audio-progress {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border);
+  border-radius: 4px;
+  height: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.audio-progress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(201, 168, 76, 0.5);
+}
+
+/* Page transition */
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: pageIn 0.25s ease-out;
+}
+
+/* Responsive sidebar overlay */
+.sidebar-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+/* Playing animation */
+@keyframes soundwave {
+
+  0%,
+  100% {
+    height: 4px;
+  }
+
+  50% {
+    height: 14px;
+  }
+}
+
+.soundwave-bar {
+  animation: soundwave 0.8s ease-in-out infinite;
+  background: var(--gold);
+  width: 3px;
+  border-radius: 2px;
+}
+
+.soundwave-bar:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.soundwave-bar:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.soundwave-bar:nth-child(4) {
+  animation-delay: 0.3s;
 }
