@@ -1,26 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { Surah } from "@/types";
-import { fetchAllSurahs } from "@/lib/api";
-import { useFontSettings } from "@/hooks/useFontSettings";
+import { Collection, LastRead } from "./components/home/Collection";
+import { SurahList } from "./components/home/SurahList";
+import { AppBanner } from "./components/home/AppBanner";
+import { SadaqahBanner } from "./components/home/SadaqahBanner";
+import { Surah } from "./types";
+import { FontSettingsPanel } from "./components/settings/FontSettingsPanel";
+import { Navbar } from "./components/layout/Navbar";
+import { Hero } from "./components/home/Hero";
+import { Footer } from "./components/layout/Footer";
+import { fetchAllSurahs } from "./lib/api";
+import { SearchModal } from "./components/search/SearchModal";
+import { useFontSettings } from "./hooks/useFontSettings";
 
-// Layout
-import { Navbar } from "@/components/navbar/Navbar";
-import { Footer } from "@/components/layout/Footer";
-
-// Hero
-import { Hero } from "@/components/hero/Hero";
-
-// Home sections
-import { Collection, type LastRead } from "@/components/home/Collection";
-import { SurahList } from "@/components/home/SurahList";
-import { AppBanner } from "@/components/home/AppBanner";
-import { SadaqahBanner } from "@/components/home/SadaqahBanner";
-
-// Modals
-import { SearchModal } from "@/components/search/SearchModal";
-import { FontSettingsPanel } from "@/components/settings/FontSettingsPanel";
 
 export default function HomePage() {
   const [surahs,       setSurahs]      = useState<Surah[]>([]);
