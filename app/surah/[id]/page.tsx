@@ -17,13 +17,6 @@ import { AyahCard } from "@/app/components/ayah/AyahCard";
 import { BottomAudioPlayer } from "@/app/components/audio/BottomPlayer";
 import { RightPanel } from "@/app/components/layout/RightPanel";
 
-// import { IconSidebar } from "./components/IconSidebar";
-// import { SurahSidebar } from "./components/SurahSidebar";
-// import { SurahNavbar } from "./components/SurahNavbar";
-// import { AyahCard } from "./components/AyahCard";
-// import { BottomAudioPlayer } from "./components/BottomAudioPlayer";
-// import { RightPanel } from "./components/RightPanel";
-
 export default function SurahPage() {
   const params = useParams();
   const surahId = Number(params.id);
@@ -39,8 +32,9 @@ export default function SurahPage() {
   const [fontPanelOpen, setFontPanelOpen] = useState(true);
   const [readingPanelOpen, setReadingPanelOpen] = useState(false);
 
-  const { settings, setArabicFont, setArabicFontSize, setTranslationFontSize } =
-    useFontSettings();
+  const { settings, setArabicFont, setArabicFontSize, setTranslationFontSize } = useFontSettings();
+  const { theme, setTheme } = useTheme();
+  
   const {
     state: audio,
     playAyah,
@@ -52,19 +46,6 @@ export default function SurahPage() {
     isPlayingAyah,
     isLoadingAyah,
   } = useAudioPlayer(data?.total_verses ?? data?.total ?? 114);
-  const { theme, setTheme } = useTheme();
-
-  // Ctrl+K shortcut
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-        e.preventDefault();
-        setSearchOpen(true);
-      }
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, []);
 
   useEffect(() => {
     fetchAllSurahs().then(setAllSurahs).catch(() => {});
@@ -78,10 +59,9 @@ export default function SurahPage() {
     }
     setLoading(true);
     setError(null);
-    setData(null);
     fetchSurahAyahs(surahId)
       .then((d) => { setData(d); setLoading(false); })
-      .catch(() => { setError("Failed to load. Check backend connection."); setLoading(false); });
+      .catch(() => { setError("Failed to load."); setLoading(false); });
   }, [surahId]);
 
   const surahName = data?.surah.transliteration ?? `Surah ${surahId}`;
@@ -89,7 +69,7 @@ export default function SurahPage() {
   const prevId = surahId > 1 ? surahId - 1 : null;
   const nextId = surahId < 114 ? surahId + 1 : null;
 
-  // Parse ayahs from API response
+  // ══ আপনার অরিজিনাল Ayah Parsing Logic (যা কাজ করছিল) ══
   const allVerses = (() => {
     if (!data) return [];
     const ayahsArray = Object.values(data?.ayahs || {});
@@ -129,27 +109,16 @@ export default function SurahPage() {
 
   return (
     <div
-      className="flex h-screen overflow-hidden"
+      className="flex h-screen overflow-hidden" 
       style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}
     >
-      {/* ══ LEFT ICON RAIL ══ */}
+      {/* ১. আইকন সাইডবার বামে ফিক্সড থাকবে */}
       <IconSidebar surahId={surahId} theme={theme} setTheme={setTheme} />
 
-      {/* ══ SURAH SIDEBAR ══ */}
-      <SurahSidebar
-        surahId={surahId}
-        allSurahs={allSurahs}
-        mobileSidebar={mobileSidebar}
-        setMobileSidebar={setMobileSidebar}
-        sidebarTab={sidebarTab}
-        setSidebarTab={setSidebarTab}
-        surahFilter={surahFilter}
-        setSurahFilter={setSurahFilter}
-      />
-
-      {/* ══ CENTER READER ══ */}
-      <main className="flex-1 flex flex-col overflow-hidden min-w-0">
-        {/* Sticky Navbar (hides on scroll down) */}
+      {/* ২. ডানদিকের অংশ যেখানে উপরে Navbar এবং নিচে বাকি সব থাকবে */}
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+        
+        {/* Navbar আইকন সাইডবারের ডান থেকে শুরু হবে */}
         <SurahNavbar
           surahName={surahName}
           surahId={surahId}
@@ -161,167 +130,103 @@ export default function SurahPage() {
           onMobileSidebar={() => setMobileSidebar(true)}
         />
 
-        {/* Scrollable content */}
-        <div
-          id="surah-scroll-area"
-          className="flex-1 overflow-y-auto"
-          style={{ paddingBottom: audio.currentAyah ? "72px" : "0" }}
-        >
-          {loading && (
-            <div
-              className="flex flex-col items-center justify-center py-24 gap-3"
-              style={{ color: "var(--text-muted)" }}
-            >
-              <Loader2 size={32} className="animate-spin" style={{ color: "var(--gold)" }} />
-              <p className="text-sm">Loading surah...</p>
-            </div>
-          )}
+        {/* নিচের কন্টেন্ট এরিয়া */}
+        <div className="flex flex-1 overflow-hidden">
+          <SurahSidebar
+            surahId={surahId}
+            allSurahs={allSurahs}
+            mobileSidebar={mobileSidebar}
+            setMobileSidebar={setMobileSidebar}
+            sidebarTab={sidebarTab}
+            setSidebarTab={setSidebarTab}
+            surahFilter={surahFilter}
+            setSurahFilter={setSurahFilter}
+          />
 
-          {error && (
-            <div className="flex flex-col items-center justify-center py-24 gap-3">
-              <AlertCircle size={28} className="text-red-400" />
-              <p className="text-sm text-red-400">{error}</p>
-              <button
-                onClick={() => window.location.reload()}
-                style={{ color: "var(--gold)" }}
-                className="text-xs hover:underline"
-              >
-                Retry
-              </button>
-            </div>
-          )}
-
-          {data && (
-            <>
-              {/* Surah header */}
-              <div
-                className="border-b px-4 sm:px-6 py-5 text-center relative flex-shrink-0"
-                style={{
-                  background: "var(--bg-secondary)",
-                  borderColor: "var(--border)",
-                }}
-              >
-                <div className="absolute left-4 sm:left-6 top-4 opacity-20 text-3xl">🕌</div>
-                <h1
-                  className="text-lg sm:text-xl font-bold"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  Surah {data.surah.transliteration}
-                </h1>
-                <div
-                  className="flex items-center justify-center gap-2 mt-1"
-                  style={{ color: "var(--text-muted)", fontSize: "13px" }}
-                >
-                  <MapPin size={11} />
-                  <span>Ayah-{data.total ?? data.total_verses}</span>
-                  <span>·</span>
-                  <span>{data.surah.type === "meccan" ? "Makkah" : "Madinah"}</span>
+          <main className="flex-1 flex flex-col overflow-hidden min-w-0 border-x" style={{ borderColor: "var(--border)" }}>
+            <div id="surah-scroll-area" className="flex-1 overflow-y-auto" style={{ paddingBottom: audio.currentAyah ? "80px" : "0" }}>
+              {loading && (
+                <div className="flex flex-col items-center justify-center py-24 gap-3">
+                  <Loader2 size={32} className="animate-spin text-[#2d6a2d]" />
+                  <p className="text-sm text-gray-400">Loading surah...</p>
                 </div>
-              </div>
+              )}
 
-              {/* Ayah list */}
-              <div>
-                {allVerses.map((ayah: any) => (
-                  <AyahCard
-                    key={`${surahId}-${ayah.verse}`}
-                    ayah={ayah}
-                    surahId={surahId}
-                    surahName={surahName}
-                    fontSettings={settings}
-                    isPlaying={isPlayingAyah(surahId, ayah.verse)}
-                    isLoading={isLoadingAyah(surahId, ayah.verse)}
-                    onPlay={() => playAyah(surahId, ayah.verse)}
-                  />
-                ))}
-              </div>
+              {error && (
+                <div className="flex flex-col items-center justify-center py-24 gap-3">
+                  <AlertCircle size={28} className="text-red-400" />
+                  <p className="text-sm text-red-400">{error}</p>
+                </div>
+              )}
 
-              {/* Prev / Next */}
-              <div
-                className="flex items-center justify-between px-4 sm:px-6 py-6 border-t"
-                style={{ borderColor: "var(--border)" }}
-              >
-                {prevId ? (
-                  <Link
-                    href={`/surah/${prevId}`}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition"
-                    style={{
-                      background: "var(--bg-card)",
-                      border: "1px solid var(--border)",
-                      color: "var(--text-primary)",
-                    }}
-                    onMouseEnter={(e) =>
-                      ((e.currentTarget as HTMLElement).style.borderColor = "var(--gold)")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.currentTarget as HTMLElement).style.borderColor = "var(--border)")
-                    }
-                  >
-                    <ChevronLeft size={15} />
-                    <div>
-                      <div style={{ color: "var(--text-muted)", fontSize: "11px" }}>Previous</div>
-                      <div className="text-xs font-medium">
-                        {allSurahs[prevId - 1]?.transliteration}
-                      </div>
+              {data && (
+                <>
+                  <div className="border-b px-6 py-8 text-center" style={{ background: "var(--bg-secondary)", borderColor: "var(--border)" }}>
+                    <h1 className="text-2xl font-bold">Surah {data.surah.transliteration}</h1>
+                    <div className="flex items-center justify-center gap-2 mt-2 text-sm text-gray-500">
+                      <MapPin size={14} />
+                      <span>{data.surah.type === "meccan" ? "Makkah" : "Madinah"}</span>
+                      <span>•</span>
+                      <span>{data.total ?? data.total_verses} Ayahs</span>
                     </div>
-                  </Link>
-                ) : (
-                  <div />
-                )}
-                {nextId && (
-                  <Link
-                    href={`/surah/${nextId}`}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition ml-auto"
-                    style={{
-                      background: "var(--bg-card)",
-                      border: "1px solid var(--border)",
-                      color: "var(--text-primary)",
-                    }}
-                    onMouseEnter={(e) =>
-                      ((e.currentTarget as HTMLElement).style.borderColor = "var(--gold)")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.currentTarget as HTMLElement).style.borderColor = "var(--border)")
-                    }
-                  >
-                    <div className="text-right">
-                      <div style={{ color: "var(--text-muted)", fontSize: "11px" }}>Next</div>
-                      <div className="text-xs font-medium">
-                        {allSurahs[nextId - 1]?.transliteration}
-                      </div>
-                    </div>
-                    <ChevronRight size={15} />
-                  </Link>
-                )}
-              </div>
-            </>
-          )}
+                  </div>
+
+                  <div className="max-w-5xl mx-auto w-full">
+                    {allVerses.map((ayah: any) => (
+                      <AyahCard
+                        key={`${surahId}-${ayah.verse}`}
+                        ayah={ayah}
+                        surahId={surahId}
+                        surahName={surahName}
+                        fontSettings={settings}
+                        isPlaying={isPlayingAyah(surahId, ayah.verse)}
+                        isLoading={isLoadingAyah(surahId, ayah.verse)}
+                        onPlay={() => playAyah(surahId, ayah.verse)}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between px-6 py-10 max-w-5xl mx-auto w-full">
+                    {prevId ? (
+                      <Link href={`/surah/${prevId}`} className="flex items-center gap-2 px-4 py-2 rounded-xl border hover:bg-gray-50 transition">
+                        <ChevronLeft size={16} /> Previous
+                      </Link>
+                    ) : <div />}
+                    {nextId && (
+                      <Link href={`/surah/${nextId}`} className="flex items-center gap-2 px-4 py-2 rounded-xl border hover:bg-gray-50 transition">
+                        Next <ChevronRight size={16} />
+                      </Link>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <BottomAudioPlayer
+              audio={audio}
+              surahName={surahName}
+              totalVerses={totalVerses}
+              onPause={pause}
+              onPlay={playAyah}
+              onStop={stop}
+              onSeek={seek}
+              onSkipPrev={skipPrev}
+              onSkipNext={skipNext}
+            />
+          </main>
+
+          <RightPanel
+            settings={settings}
+            fontPanelOpen={fontPanelOpen}
+            setFontPanelOpen={setFontPanelOpen}
+            readingPanelOpen={readingPanelOpen}
+            setReadingPanelOpen={setReadingPanelOpen}
+            setArabicFont={setArabicFont}
+            setArabicFontSize={setArabicFontSize}
+            setTranslationFontSize={setTranslationFontSize}
+          />
         </div>
-
-        {/* ══ BOTTOM AUDIO PLAYER ══ */}
-        <BottomAudioPlayer
-          audio={audio}
-          surahName={surahName}
-          totalVerses={totalVerses}
-          onPause={pause}
-          onPlay={playAyah}
-          onStop={stop}
-          onSeek={seek}
-          onSkipPrev={skipPrev}
-          onSkipNext={skipNext}
-        />
-      </main>
-
-      {/* ══ RIGHT PANEL ══ */}
-      <RightPanel
-        settings={settings}
-        fontPanelOpen={fontPanelOpen}
-        setFontPanelOpen={setFontPanelOpen}
-        readingPanelOpen={readingPanelOpen}
-        setReadingPanelOpen={setReadingPanelOpen}
-        setArabicFont={setArabicFont}
-        setArabicFontSize={setArabicFontSize}
-        setTranslationFontSize={setTranslationFontSize}
-      />
+      </div>
 
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
