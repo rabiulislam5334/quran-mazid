@@ -13,7 +13,6 @@ import { fetchAllSurahs } from "./lib/api";
 import { SearchModal } from "./components/search/SearchModal";
 import { useFontSettings } from "./hooks/useFontSettings";
 import { Navbar } from "./components/layout/Navbar";
-// ১. useTheme হুকটি ইম্পোর্ট করুন
 import { useTheme } from "./hooks/useTheme";
 
 export default function HomePage() {
@@ -22,10 +21,9 @@ export default function HomePage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [lastReads, setLastReads] = useState<LastRead[]>([]);
-
   const { settings, setArabicFont, setArabicFontSize, setTranslationFontSize } = useFontSettings();
   
-  // ২. theme এবং setTheme স্টেটটি হুক থেকে নিয়ে আসুন
+  // থিম হুক
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -40,7 +38,14 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f5f7f2] text-[#1a2e1a]">
+    <div 
+      className="min-h-screen transition-colors duration-300"
+      // এখানে স্ট্যাটিক ক্লাসের বদলে ভ্যারিয়েবল ব্যবহার করা হয়েছে
+      style={{ 
+        background: "var(--bg-primary)", 
+        color: "var(--text-primary)" 
+      }}
+    >
       {/* Modals */}
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <FontSettingsPanel
@@ -51,19 +56,27 @@ export default function HomePage() {
         onArabicSizeChange={setArabicFontSize}
         onTranslationSizeChange={setTranslationFontSize}
       />
-
-      {/* ৩. Navbar-এ theme এবং setTheme প্রপস হিসেবে পাঠিয়ে দিন */}
+      
+      {/* নববার */}
       <Navbar 
         theme={theme} 
         setTheme={setTheme} 
         onSettingsClick={() => setSettingsOpen(true)} 
       />
 
-      <Hero onSearchClick={() => setSearchOpen(true)} />
-      <Collection lastReads={lastReads} />
-      <SurahList surahs={surahs} loading={loading} />
-      <AppBanner />
-      <SadaqahBanner />
+      {/* কন্টেন্ট এরিয়া */}
+      <main>
+        <Hero onSearchClick={() => setSearchOpen(true)} />
+        <Collection lastReads={lastReads} />
+        
+        {/* সূরা লিস্ট এবং অন্যান্য সেকশনে যদি সাদা ব্যাকগ্রাউন্ড থাকে, 
+            সেগুলো তাদের নিজস্ব কম্পোনেন্টের ভেতরে var(--bg-secondary) দিয়ে আপডেট করতে হবে */}
+        <SurahList surahs={surahs} loading={loading} />
+        
+        <AppBanner />
+        <SadaqahBanner />
+      </main>
+
       <Footer />
     </div>
   );

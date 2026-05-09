@@ -1,12 +1,16 @@
 export function AppBanner() {
   return (
-    // width বাড়ানোর জন্য 'max-w-6xl' পরিবর্তন করে 'max-w-[1400px]' বা 'max-w-7xl' করা হয়েছে
-    <section className="max-w-[1400px] mx-auto px-4 md:px-6 py-10 mb-10">
-      
-      {/* ভেতরের কন্টেইনারের width এবং height বাড়ানোর জন্য p-20 এবং min-h যোগ করা হয়েছে */}
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-[#112311] to-[#1a2e1a] p-8 md:p-20 flex flex-col md:flex-row items-center gap-12 min-h-[500px]">
-        
-        {/* Left Side: Content (width বাড়াতে flex-[1.2] ব্যবহার করা হয়েছে) */}
+    <section 
+      className="max-w-[1400px] mx-auto px-4 md:px-6 py-10 mb-10 transition-colors duration-300"
+      style={{ background: "transparent" }}
+    >
+      <div 
+        className="relative overflow-hidden rounded-[2.5rem] p-8 md:p-20 flex flex-col md:flex-row items-center gap-12 min-h-[500px]"
+        style={{
+          background: "linear-gradient(to right, #112311, #1a2e1a)", // ডার্ক থিমে এটি সুন্দর দেখায়
+          border: "1px solid var(--border)"
+        }}
+      >
         <div className="flex-[1.2] text-white z-10">
           <h2 className="text-5xl md:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
             Download The App<br /> 
@@ -28,23 +32,18 @@ export function AppBanner() {
           </div>
         </div>
 
-        {/* Right Side: Mockup Images (width বাড়ানো হয়েছে) */}
         <div className="relative flex-1 w-full h-[400px] md:h-[550px] flex justify-end items-center">
-          {/* Desktop Mockup */}
           <img 
             src="/mockup-desktop-light.webp" 
             alt="Desktop Preview" 
-            className="absolute -right-10 md:-right-20 top-1/2 -translate-y-1/2 w-[110%] max-w-none rounded-xl shadow-2xl opacity-40 md:opacity-100"
+            className="absolute -right-10 md:-right-20 top-1/2 -translate-y-1/2 w-[110%] max-w-none rounded-xl shadow-2xl opacity-40 md:opacity-100 dark:brightness-75"
           />
-          
-          {/* Mobile Mockup */}
           <img 
             src="/mockup-mobile-light.webp" 
             alt="Mobile Preview" 
-            className="absolute right-0 md:right-10 bottom-[-20px] w-[45%] md:w-[280px] drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] z-20"
+            className="absolute right-0 md:right-10 bottom-[-20px] w-[45%] md:w-[280px] drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] z-20 dark:brightness-90"
           />
         </div>
-
       </div>
     </section>
   );

@@ -4,12 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 export type Theme = "dark" | "light" | "sepia" | "system";
 
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>("light"); // ← ডিফল্ট লাইট করা হয়েছে
+  const [theme, setThemeState] = useState<Theme>("light"); 
 
   useEffect(() => {
     const stored = localStorage.getItem("quran_theme") as Theme | null;
     
-    // যদি আগে কোনো থিম সেভ না থাকে তাহলে লাইট হবে
+    
     const initialTheme = stored || "light"; 
     
     setThemeState(initialTheme);

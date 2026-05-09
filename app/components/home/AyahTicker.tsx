@@ -19,11 +19,17 @@ export function AyahTicker() {
   const ticker = AYAH_TICKER[idx];
 
   return (
-    <div className="min-h-[120px] flex flex-col items-center justify-center my-10 px-4">
-      <p className="text-lg md:text-xl text-[#3a5a3a] max-w-3xl text-center font-medium leading-relaxed italic transition-all duration-700 ease-in-out">
+    <div className="min-h-[120px] flex flex-col items-center justify-center my-10 px-4 transition-all duration-700">
+      <p 
+        className="text-lg md:text-xl max-w-3xl text-center font-medium leading-relaxed italic"
+        style={{ color: "var(--text-secondary)" }}
+      >
         "{ticker.text}"
       </p>
-      <p className="text-sm md:text-base text-[#5a7a5a] mt-3 font-semibold tracking-widest uppercase">
+      <p 
+        className="text-sm md:text-base mt-3 font-semibold tracking-widest uppercase"
+        style={{ color: "var(--text-muted)" }}
+      >
         [ {ticker.ref} ]
       </p>
     </div>
