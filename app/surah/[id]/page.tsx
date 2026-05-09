@@ -69,7 +69,6 @@ export default function SurahPage() {
   const prevId = surahId > 1 ? surahId - 1 : null;
   const nextId = surahId < 114 ? surahId + 1 : null;
 
-  // ══ আপনার অরিজিনাল Ayah Parsing Logic (যা কাজ করছিল) ══
   const allVerses = (() => {
     if (!data) return [];
     const ayahsArray = Object.values(data?.ayahs || {});
@@ -109,16 +108,17 @@ export default function SurahPage() {
 
   return (
     <div
-      className="flex h-screen overflow-hidden" 
+      className="flex min-h-screen" 
       style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}
     >
-      {/* ১. আইকন সাইডবার বামে ফিক্সড থাকবে */}
-      <IconSidebar surahId={surahId} theme={theme} setTheme={setTheme} />
+   
+      <div className="sticky top-0 h-screen shrink-0">
+        <IconSidebar surahId={surahId} theme={theme} setTheme={setTheme} />
+      </div>
 
-      {/* ২. ডানদিকের অংশ যেখানে উপরে Navbar এবং নিচে বাকি সব থাকবে */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+      <div className="flex flex-col flex-1 min-w-0">
         
-        {/* Navbar আইকন সাইডবারের ডান থেকে শুরু হবে */}
+     
         <SurahNavbar
           surahName={surahName}
           surahId={surahId}
@@ -130,32 +130,29 @@ export default function SurahPage() {
           onMobileSidebar={() => setMobileSidebar(true)}
         />
 
-        {/* নিচের কন্টেন্ট এরিয়া */}
-        <div className="flex flex-1 overflow-hidden">
-          <SurahSidebar
-            surahId={surahId}
-            allSurahs={allSurahs}
-            mobileSidebar={mobileSidebar}
-            setMobileSidebar={setMobileSidebar}
-            sidebarTab={sidebarTab}
-            setSidebarTab={setSidebarTab}
-            surahFilter={surahFilter}
-            setSurahFilter={setSurahFilter}
-          />
+        <div className="flex flex-1 items-start">
+          
+        
+          <aside className="sticky top-0 h-screen overflow-y-auto hidden md:block shrink-0">
+            <SurahSidebar
+                surahId={surahId}
+                allSurahs={allSurahs}
+                mobileSidebar={mobileSidebar}
+                setMobileSidebar={setMobileSidebar}
+                sidebarTab={sidebarTab}
+                setSidebarTab={setSidebarTab}
+                surahFilter={surahFilter}
+                setSurahFilter={setSurahFilter}
+            />
+          </aside>
 
-          <main className="flex-1 flex flex-col overflow-hidden min-w-0 border-x" style={{ borderColor: "var(--border)" }}>
-            <div id="surah-scroll-area" className="flex-1 overflow-y-auto" style={{ paddingBottom: audio.currentAyah ? "80px" : "0" }}>
+      
+          <main className="flex-1 min-w-0 border-x" style={{ borderColor: "var(--border)" }}>
+            <div className="pb-24"> 
               {loading && (
                 <div className="flex flex-col items-center justify-center py-24 gap-3">
                   <Loader2 size={32} className="animate-spin text-[#2d6a2d]" />
                   <p className="text-sm text-gray-400">Loading surah...</p>
-                </div>
-              )}
-
-              {error && (
-                <div className="flex flex-col items-center justify-center py-24 gap-3">
-                  <AlertCircle size={28} className="text-red-400" />
-                  <p className="text-sm text-red-400">{error}</p>
                 </div>
               )}
 
@@ -201,31 +198,37 @@ export default function SurahPage() {
                 </>
               )}
             </div>
-
-            <BottomAudioPlayer
-              audio={audio}
-              surahName={surahName}
-              totalVerses={totalVerses}
-              onPause={pause}
-              onPlay={playAyah}
-              onStop={stop}
-              onSeek={seek}
-              onSkipPrev={skipPrev}
-              onSkipNext={skipNext}
-            />
           </main>
 
-          <RightPanel
-            settings={settings}
-            fontPanelOpen={fontPanelOpen}
-            setFontPanelOpen={setFontPanelOpen}
-            readingPanelOpen={readingPanelOpen}
-            setReadingPanelOpen={setReadingPanelOpen}
-            setArabicFont={setArabicFont}
-            setArabicFontSize={setArabicFontSize}
-            setTranslationFontSize={setTranslationFontSize}
-          />
+      
+          <aside className="sticky top-0 h-screen overflow-y-auto hidden lg:block shrink-0">
+            <RightPanel
+                settings={settings}
+                fontPanelOpen={fontPanelOpen}
+                setFontPanelOpen={setFontPanelOpen}
+                readingPanelOpen={readingPanelOpen}
+                setReadingPanelOpen={setReadingPanelOpen}
+                setArabicFont={setArabicFont}
+                setArabicFontSize={setArabicFontSize}
+                setTranslationFontSize={setTranslationFontSize}
+            />
+          </aside>
         </div>
+      </div>
+
+    
+      <div className="fixed bottom-0 left-0 right-0 z-50">
+        <BottomAudioPlayer
+            audio={audio}
+            surahName={surahName}
+            totalVerses={totalVerses}
+            onPause={pause}
+            onPlay={playAyah}
+            onStop={stop}
+            onSeek={seek}
+            onSkipPrev={skipPrev}
+            onSkipNext={skipNext}
+        />
       </div>
 
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
