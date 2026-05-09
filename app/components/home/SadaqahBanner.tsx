@@ -1,7 +1,7 @@
 export function SadaqahBanner() {
   return (
     <section className="relative overflow-hidden bg-white py-20 text-center">
-      {/* Background illustration (মসজিদ/মরুভূমি আর্ট থাকলে এখানে ইমেজ হিসেবে দিতে পারেন) */}
+   
       <div className="absolute bottom-0 left-0 w-full opacity-20 pointer-events-none">
          <img src="/footer-art.png" alt="" className="w-full h-auto" /> 
       </div>

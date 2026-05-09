@@ -28,10 +28,10 @@ export function Hero({ onSearchClick }: HeroProps) {
 
       {/* Decorative Lanterns (Left & Right) */}
       <div className="hidden lg:block pointer-events-none absolute top-12 left-16 opacity-30 select-none animate-bounce duration-[3000ms]">
-        <img src="/lantern.png" alt="lantern" className="w-16 h-auto" />
+        <img src="/vlight.png" alt="lantern" className="w-16 h-auto" />
       </div>
       <div className="hidden lg:block pointer-events-none absolute top-12 right-16 opacity-30 select-none animate-bounce duration-[3000ms]">
-        <img src="/lantern.png" alt="lantern" className="w-16 h-auto" />
+        <img src="/vlight.png" alt="lantern" className="w-16 h-auto" />
       </div>
 
       <div className="relative max-w-4xl mx-auto px-4 z-10">

@@ -10,13 +10,15 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "QuranMazid – Read, Listen & Understand the Holy Quran",
-  description:
-    "Read the Holy Quran online with Arabic text, English translation, and audio recitation. Browse all 114 surahs with beautiful typography.",
-  keywords: "Quran, Islam, Arabic, translation, recitation, surah, ayah",
-  openGraph: {
-    title: "QuranMazid",
-    description: "Read the Holy Quran online",
-    type: "website",
+  description: "Read the Holy Quran online",
+  // আইকন সেকশন
+  icons: {
+    icon: [
+      {
+        url: "/quran_mazid.png",
+        href: "/quran_mazid.png",
+      },
+    ],
   },
 };
 

@@ -18,7 +18,7 @@ export function SurahList({ surahs, loading }: SurahListProps) {
   const displayed = showAll ? surahs : surahs.slice(0, 20);
 
   return (
-    // width বাড়ানো হয়েছে max-w-[1400px] দিয়ে
+    
     <section className="max-w-[1400px] mx-auto px-4 md:px-8 py-10">
       
       {/* Header Section: Title and Tabs */}
