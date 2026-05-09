@@ -20,6 +20,7 @@ export interface SurahWithAyahs {
   surah: Surah;
   ayahs: Ayah[];
   total: number;
+  total_verses?: number;
 }
 
 export interface SearchResult {

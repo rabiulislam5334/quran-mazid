@@ -36,16 +36,16 @@ export default function SurahPage() {
   const { theme, setTheme } = useTheme();
   
   const {
-    state: audio,
-    playAyah,
-    pause,
-    stop,
-    seek,
-    skipPrev,
-    skipNext,
-    isPlayingAyah,
-    isLoadingAyah,
-  } = useAudioPlayer(data?.total_verses ?? data?.total ?? 114);
+  state: audio,
+  playAyah,
+  pause,
+  stop,
+  seek,
+  skipPrev,
+  skipNext,
+  isPlayingAyah,
+  isLoadingAyah,
+} = useAudioPlayer();
 
   useEffect(() => {
     fetchAllSurahs().then(setAllSurahs).catch(() => {});
@@ -81,8 +81,8 @@ export default function SurahPage() {
           if (verseNum) {
             verses.push({
               verse: verseNum,
-              text: item.text[key],
-              translation: item.translation?.[key] || "",
+              text: (item.text as any)[key],
+             translation: (item.translation as any)?.[key] || "",
               audio_url: item.audio_url,
               surah: item.surah,
             });
