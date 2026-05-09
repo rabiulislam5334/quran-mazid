@@ -6,7 +6,6 @@ export async function fetchAllSurahs(): Promise<Surah[]> {
   const res = await fetch(`${API_URL}/api/surahs`);
   if (!res.ok) throw new Error("Failed to fetch surahs");
   const json = await res.json();
-  // আপনার API সরাসরি Array রিটার্ন করছে, তাই json.data এর প্রয়োজন নেই
   return Array.isArray(json) ? json : json.data || [];
 }
 

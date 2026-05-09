@@ -40,7 +40,7 @@ export default function HomePage() {
   return (
     <div 
       className="min-h-screen transition-colors duration-300"
-      // এখানে স্ট্যাটিক ক্লাসের বদলে ভ্যারিয়েবল ব্যবহার করা হয়েছে
+      
       style={{ 
         background: "var(--bg-primary)", 
         color: "var(--text-primary)" 
@@ -57,20 +57,16 @@ export default function HomePage() {
         onTranslationSizeChange={setTranslationFontSize}
       />
       
-      {/* নববার */}
+   
       <Navbar 
         theme={theme} 
         setTheme={setTheme} 
         onSettingsClick={() => setSettingsOpen(true)} 
       />
-
-      {/* কন্টেন্ট এরিয়া */}
       <main>
         <Hero onSearchClick={() => setSearchOpen(true)} />
         <Collection lastReads={lastReads} />
         
-        {/* সূরা লিস্ট এবং অন্যান্য সেকশনে যদি সাদা ব্যাকগ্রাউন্ড থাকে, 
-            সেগুলো তাদের নিজস্ব কম্পোনেন্টের ভেতরে var(--bg-secondary) দিয়ে আপডেট করতে হবে */}
         <SurahList surahs={surahs} loading={loading} />
         
         <AppBanner />

@@ -62,7 +62,7 @@ export function SurahNavbar({
     <nav
       className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-3 border-b transition-all duration-300"
       style={{
-        background: "var(--bg-primary)",
+        background: "#FFFFFF",
         borderColor: "var(--border)",
         transform: visible ? "translateY(0)" : "translateY(-100%)",
         boxShadow: "0 2px 10px rgba(0,0,0,0.02)"

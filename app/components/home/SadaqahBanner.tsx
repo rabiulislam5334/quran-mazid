@@ -4,7 +4,7 @@ export function SadaqahBanner() {
       className="relative overflow-hidden py-20 text-center transition-colors duration-300"
       style={{ background: "var(--bg-primary)" }}
     >
-      {/* Footer Art - Dark mode এ হালকা অপাসিটি কমানো হয়েছে */}
+   
       <div className="absolute bottom-0 left-0 w-full opacity-10 pointer-events-none dark:invert">
          <img src="/footer-art.png" alt="" className="w-full h-auto" /> 
       </div>

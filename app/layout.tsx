@@ -11,7 +11,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "QuranMazid – Read, Listen & Understand the Holy Quran",
   description: "Read the Holy Quran online",
-  // আইকন সেকশন
+
   icons: {
     icon: [
       {

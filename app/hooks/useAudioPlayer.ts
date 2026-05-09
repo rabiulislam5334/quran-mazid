@@ -143,7 +143,7 @@ export function useAudioPlayer() {
     const onEnded = () => {
       isPlayingRef.current = false;
 
-      // ref থেকে সরাসরি পড়ো — stale closure নেই
+     
       const current = currentAyahRef.current;
       if (!current) return;
 

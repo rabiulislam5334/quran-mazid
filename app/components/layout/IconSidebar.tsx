@@ -41,11 +41,11 @@ export function IconSidebar({ surahId, theme, setTheme }: IconSidebarProps) {
     <aside
       className="hidden md:flex flex-col items-center w-16 flex-shrink-0 z-30 py-6 transition-colors duration-300 h-full"
       style={{
-        background: "var(--bg-primary)", // আপনি হোয়াইট চাইলে এখানে সরাসরি "#FFFFFF" দিতে পারেন
+        background: "var(--bg-primary)", 
         borderRight: "1px solid var(--border)",
       }}
     >
-      {/* ১. লোগো - একদম উপরে */}
+   
       <Link href="/" className="mb-10 transition-transform hover:scale-110 active:scale-95">
         <div className="w-10 h-10 flex items-center justify-center">
           <img 

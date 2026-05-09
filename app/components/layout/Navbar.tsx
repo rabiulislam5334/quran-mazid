@@ -22,7 +22,7 @@ const THEMES: { id: Theme; label: string; icon: React.ReactNode }[] = [
 export function Navbar({ theme, setTheme }: NavbarProps) {
   const [themeMenuOpen, setThemeMenuOpen] = useState(false);
 
-  // Theme আপডেট করার জন্য useEffect (SurahNavbar এর লজিক অনুযায়ী)
+  
   useEffect(() => {
     const root = window.document.documentElement;
     let targetTheme = theme;
@@ -33,10 +33,10 @@ export function Navbar({ theme, setTheme }: NavbarProps) {
         : "light";
     }
 
-    // data-theme সেট করা যা আপনার CSS Variables নিয়ন্ত্রণ করবে
+    
     root.setAttribute("data-theme", targetTheme);
     
-    // Tailwind dark mode ক্লাসের জন্য
+    
     if (targetTheme === "dark") {
       root.classList.add("dark");
     } else {
@@ -59,7 +59,7 @@ export function Navbar({ theme, setTheme }: NavbarProps) {
     <nav 
       className="sticky top-0 z-50 border-b px-4 md:px-8 transition-colors duration-300"
       style={{
-        background: "var(--bg-secondary)", // CSS Variable ব্যবহার করা হয়েছে
+        background: "var(--bg-secondary)", 
         borderColor: "var(--border)",
         backdropFilter: "blur(12px)",
       }}

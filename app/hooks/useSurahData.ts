@@ -32,7 +32,7 @@ export function useSurahData() {
       .catch(() => { setError("Failed to load"); setLoading(false); });
   }, [surahId]);
 
-  // API response থেকে ayah array বের করো
+ 
   const ayahs = (() => {
     if (!data) return [];
     const arr = Object.values(data?.ayahs || {});
