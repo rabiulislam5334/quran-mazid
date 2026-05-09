@@ -14,16 +14,18 @@ import { SearchModal } from "./components/search/SearchModal";
 import { useFontSettings } from "./hooks/useFontSettings";
 import { Navbar } from "./components/layout/Navbar";
 import { useTheme } from "./hooks/useTheme";
+import { Sidebar } from "./components/layout/Sidebar"; 
+import { BottomNav } from "./components/layout/BottomNav"; 
 
 export default function HomePage() {
   const [surahs, setSurahs] = useState<Surah[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
   const [lastReads, setLastReads] = useState<LastRead[]>([]);
   const { settings, setArabicFont, setArabicFontSize, setTranslationFontSize } = useFontSettings();
   
-  // থিম হুক
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -39,15 +41,22 @@ export default function HomePage() {
 
   return (
     <div 
-      className="min-h-screen transition-colors duration-300"
-      
+      className="min-h-screen transition-colors duration-300 pb-16 lg:pb-0" // মোবাইলে বটম নেভের জন্য প্যাডিং
       style={{ 
         background: "var(--bg-primary)", 
         color: "var(--text-primary)" 
       }}
     >
-      {/* Modals */}
+      {/* Modals & Overlays */}
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      
+   
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)} 
+        surahs={surahs}
+      />
+
       <FontSettingsPanel
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
@@ -57,23 +66,26 @@ export default function HomePage() {
         onTranslationSizeChange={setTranslationFontSize}
       />
       
-   
+  
       <Navbar 
         theme={theme} 
         setTheme={setTheme} 
         onSettingsClick={() => setSettingsOpen(true)} 
+        onMobileSidebar={() => setIsSidebarOpen(true)} 
       />
+
       <main>
         <Hero onSearchClick={() => setSearchOpen(true)} />
         <Collection lastReads={lastReads} />
-        
         <SurahList surahs={surahs} loading={loading} />
-        
         <AppBanner />
         <SadaqahBanner />
       </main>
 
       <Footer />
+
+    
+      <BottomNav />
     </div>
   );
 }

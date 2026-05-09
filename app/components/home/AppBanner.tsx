@@ -7,41 +7,42 @@ export function AppBanner() {
       <div 
         className="relative overflow-hidden rounded-[2.5rem] p-8 md:p-20 flex flex-col md:flex-row items-center gap-12 min-h-[500px]"
         style={{
-          background: "linear-gradient(to right, #112311, #1a2e1a)", // ডার্ক থিমে এটি সুন্দর দেখায়
+          background: "linear-gradient(to right, #112311, #1a2e1a)",
           border: "1px solid var(--border)"
         }}
       >
-        <div className="flex-[1.2] text-white z-10">
-          <h2 className="text-5xl md:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
+        <div className="flex-[1.2] text-white z-10 text-center md:text-left">
+          <h2 className="text-4xl md:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
             Download The App<br /> 
             <span className="text-white/90">Quran Majeed (القرآن الكريم)</span>
           </h2>
           
-          <p className="text-xl md:text-2xl text-white/70 mb-10 max-w-2xl leading-relaxed">
+          <p className="text-lg md:text-2xl text-white/70 mb-10 max-w-2xl leading-relaxed">
             Download the Quran Majeed app to access the full Quran with 82+ Translations, 
             20+ Tafsir, and word-by-word.
           </p>
 
-          <div className="flex flex-wrap gap-5">
+          <div className="flex flex-wrap justify-center md:justify-start gap-5">
             <a href="#" className="hover:opacity-80 transition-opacity">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" className="h-14" />
+              <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" className="h-12 md:h-14" />
             </a>
             <a href="#" className="hover:opacity-80 transition-opacity">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" className="h-14" />
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" className="h-12 md:h-14" />
             </a>
           </div>
         </div>
 
-        <div className="relative flex-1 w-full h-[400px] md:h-[550px] flex justify-end items-center">
+        {/* এই ডিভটি মোবাইলে হাইড থাকবে (hidden) এবং বড় স্ক্রিনে দেখাবে (md:flex) */}
+        <div className="hidden md:flex relative flex-1 w-full h-[550px] justify-end items-center">
           <img 
             src="/mockup-desktop-light.webp" 
             alt="Desktop Preview" 
-            className="absolute -right-10 md:-right-20 top-1/2 -translate-y-1/2 w-[110%] max-w-none rounded-xl shadow-2xl opacity-40 md:opacity-100 dark:brightness-75"
+            className="absolute -right-10 md:-right-20 top-1/2 -translate-y-1/2 w-[110%] max-w-none rounded-xl shadow-2xl dark:brightness-75"
           />
           <img 
             src="/mockup-mobile-light.webp" 
             alt="Mobile Preview" 
-            className="absolute right-0 md:right-10 bottom-[-20px] w-[45%] md:w-[280px] drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] z-20 dark:brightness-90"
+            className="absolute right-0 md:right-10 bottom-[-20px] w-[280px] drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] z-20 dark:brightness-90"
           />
         </div>
       </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  BookOpen, Search, Sun, Moon, Book, Settings, ChevronLeft, ChevronRight, Heart
+  BookOpen, Search, Sun, Moon, Book, Settings, Heart, Menu
 } from "lucide-react";
 import { Theme } from "@/app/hooks/useTheme";
 
@@ -28,8 +28,6 @@ const THEMES: { id: Theme; label: string; icon: React.ReactNode }[] = [
 export function SurahNavbar({
   surahName,
   surahId,
-  prevId,
-  nextId,
   theme,
   setTheme,
   onSearchOpen,
@@ -55,82 +53,57 @@ export function SurahNavbar({
   }, []);
 
   const themeIcon =
-    theme === "light" ? <Sun size={20} /> : 
-    theme === "sepia" ? <Book size={20} /> : <Moon size={20} />;
+    theme === "light" ? <Sun size={18} /> : 
+    theme === "sepia" ? <Book size={18} /> : <Moon size={18} />;
 
   return (
     <nav
-      className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-3 border-b transition-all duration-300"
+      className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-2 md:py-3 border-b transition-all duration-300"
       style={{
-        background: "#FFFFFF",
+        background: "var(--bg-primary)",
         borderColor: "var(--border)",
         transform: visible ? "translateY(0)" : "translateY(-100%)",
         boxShadow: "0 2px 10px rgba(0,0,0,0.02)"
       }}
     >
-      {/* Left: Logo & Surah Info */}
-      <div className="flex items-center gap-4 md:gap-8">
-        {/* Brand Section (As per your image) */}
-        <Link href="/" className="hidden lg:block group">
-          <h1 className="text-2xl font-black tracking-tight leading-none" style={{ color: "var(--text-primary)" }}>
+      {/* Left: Mobile Menu & Desktop Logo */}
+      <div className="flex items-center gap-3">
+        {/* মেনু বাটন - lg:hidden যোগ করা হয়েছে যাতে ডেস্কটপে এটি না দেখায় */}
+        <button
+          onClick={onMobileSidebar}
+          className="w-9 h-9 flex items-center justify-center rounded-full transition hover:bg-gray-100 lg:hidden"
+          style={{ background: "var(--bg-secondary)", color: "var(--green)" }}
+        >
+          <Menu size={20} />
+        </button>
+
+        <Link href="/" className="group">
+          <h1 className="text-lg md:text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>
             Quran Mazid
           </h1>
-          <p className="text-[11px] font-medium mt-1 opacity-60" style={{ color: "var(--text-muted)" }}>
+          <p className="hidden lg:block text-[11px] font-medium opacity-60" style={{ color: "var(--text-muted)" }}>
             Read, Study, and Learn The Quran
           </p>
         </Link>
-
-        {/* Mobile Menu Toggle */}
-        <button
-          onClick={onMobileSidebar}
-          className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl transition"
-          style={{ background: "var(--bg-secondary)", color: "var(--text-primary)" }}
-        >
-          <BookOpen size={22} />
-        </button>
-
-        {/* Surah Navigation Details */}
-        <div >
-          {/* {prevId && (
-            <Link href={`/surah/${prevId}`} className="hover:text-[var(--green)] transition">
-              <ChevronLeft size={20} />
-            </Link>
-          )} */}
-          
-          {/* <div className="flex flex-col md:flex-row md:items-center md:gap-2">
-            <span className="font-bold text-base md:text-lg" style={{ color: "var(--text-primary)" }}>
-              {surahName}
-            </span>
-            <span className="text-[11px] md:text-sm font-medium opacity-50" style={{ color: "var(--text-muted)" }}>
-              Surah {surahId}
-            </span>
-          </div> */}
-
-          {/* {nextId && (
-            <Link href={`/surah/${nextId}`} className="hover:text-[var(--green)] transition">
-              <ChevronRight size={20} />
-            </Link>
-          )} */}
-        </div>
       </div>
 
-      {/* Right Actions */}
-      <div className="flex items-center gap-2 md:gap-4">
+      {/* Right Actions: Search, Theme, Settings */}
+      <div className="flex items-center gap-2 md:gap-3">
         {/* Search */}
         <button
           onClick={onSearchOpen}
-          className="w-10 h-10 flex items-center justify-center rounded-full transition-all hover:scale-105"
-          style={{ background: "var(--bg-secondary)", color: "var(--text-muted)" }}
+          className="w-9 h-9 flex items-center justify-center rounded-full transition hover:bg-gray-100"
+          style={{ background: "var(--bg-secondary)", color: "var(--green)" }}
         >
-          <Search size={20} />
+          <Search size={18} />
         </button>
 
         {/* Theme Toggler */}
         <div className="relative">
           <button
             onClick={() => setThemeMenuOpen((p) => !p)}
-            className="w-10 h-10 flex items-center justify-center rounded-full transition-all hover:scale-105"
-            style={{ background: "var(--bg-secondary)", color: "var(--gold)" }}
+            className="w-9 h-9 flex items-center justify-center rounded-full transition hover:bg-gray-100"
+            style={{ background: "var(--bg-secondary)", color: "var(--green)" }}
           >
             {themeIcon}
           </button>
@@ -149,10 +122,9 @@ export function SurahNavbar({
                       setTheme(t.id);
                       setThemeMenuOpen(false);
                     }}
-                    className="flex items-center gap-3 w-full px-4 py-3 text-sm font-medium rounded-xl transition-all"
+                    className="flex items-center gap-3 w-full px-4 py-2 text-sm font-medium rounded-xl transition-all hover:bg-gray-100/50"
                     style={{
                       color: theme === t.id ? "var(--green)" : "var(--text-primary)",
-                      background: theme === t.id ? "var(--bg-hover)" : "transparent",
                     }}
                   >
                     {t.icon}
@@ -164,12 +136,19 @@ export function SurahNavbar({
           )}
         </div>
 
-        {/* Support Us Button (Styled like the image) */}
+        {/* Settings */}
         <button
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all hover:shadow-lg active:scale-95"
-          style={{ background: "var(--green)", color: "#fff" }}
+          className="w-9 h-9 flex items-center justify-center rounded-full transition hover:bg-gray-100"
+          style={{ background: "var(--bg-secondary)", color: "var(--green)" }}
         >
-          Support Us <Heart size={16} fill="white" />
+          <Settings size={18} />
+        </button>
+
+        {/* Support Us Button */}
+        <button
+          className="hidden md:flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all hover:shadow-lg bg-[var(--green)] text-white"
+        >
+          Support Us <Heart size={14} fill="white" />
         </button>
       </div>
     </nav>

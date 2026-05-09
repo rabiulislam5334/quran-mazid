@@ -5,6 +5,11 @@ export interface Surah {
   translation: string;
   type: "meccan" | "medinan";
   total_verses: number;
+  name_simple?: string;
+  revelation_place?: string;
+  verses_count?: number;
+  name_arabic?: string;
+  
 }
 
 export interface Ayah {
