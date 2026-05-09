@@ -35,8 +35,7 @@ export function AyahCard({
   const [copied, setCopied] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll: active আয়াত scroll area-র একদম উপরে snap
-  // surah-scroll-area নিজেই navbar-এর নিচে শুরু হয়, তাই extra offset দরকার নেই
+  
   useEffect(() => {
     if (isPlaying && cardRef.current) {
       const scrollArea = document.getElementById("surah-scroll-area");

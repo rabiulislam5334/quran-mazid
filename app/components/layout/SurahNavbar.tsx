@@ -62,7 +62,7 @@ export function SurahNavbar({
     <nav
       className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-3 border-b transition-all duration-300"
       style={{
-        background: "#FFFFFF",
+        background: "var(--bg-primary)",
         borderColor: "var(--border)",
         transform: visible ? "translateY(0)" : "translateY(-100%)",
         boxShadow: "0 2px 10px rgba(0,0,0,0.02)"
@@ -90,7 +90,28 @@ export function SurahNavbar({
         </button>
 
         {/* Surah Navigation Details */}
-       
+        <div >
+          {/* {prevId && (
+            <Link href={`/surah/${prevId}`} className="hover:text-[var(--green)] transition">
+              <ChevronLeft size={20} />
+            </Link>
+          )} */}
+          
+          {/* <div className="flex flex-col md:flex-row md:items-center md:gap-2">
+            <span className="font-bold text-base md:text-lg" style={{ color: "var(--text-primary)" }}>
+              {surahName}
+            </span>
+            <span className="text-[11px] md:text-sm font-medium opacity-50" style={{ color: "var(--text-muted)" }}>
+              Surah {surahId}
+            </span>
+          </div> */}
+
+          {/* {nextId && (
+            <Link href={`/surah/${nextId}`} className="hover:text-[var(--green)] transition">
+              <ChevronRight size={20} />
+            </Link>
+          )} */}
+        </div>
       </div>
 
       {/* Right Actions */}
