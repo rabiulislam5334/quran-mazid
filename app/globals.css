@@ -1,15 +1,66 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
-:root {
+/* ─── THEMES ─── */
+:root,
+[data-theme="dark"] {
   --bg-primary: #0f1117;
   --bg-secondary: #161b27;
   --bg-tertiary: #1e2436;
+  --bg-card: #1a2035;
+  --bg-hover: #232b42;
   --gold: #c9a84c;
   --gold-light: #e2c37a;
+  --gold-dark: #a07a28;
   --text-primary: #e8e8e8;
   --text-secondary: #a0a8b8;
+  --text-muted: #606880;
+  --text-arabic: #f0ece0;
   --border: #252d42;
+  --border-light: #2e3a56;
+  --green: #2d6a2d;
+  --green-active: #4a9a4a;
+  --green-bg: #1e2d1e;
+}
+
+[data-theme="light"] {
+  --bg-primary: #f9f7f3;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0ede7;
+  --bg-card: #faf8f5;
+  --bg-hover: #f0ede7;
+  --gold: #a0782a;
+  --gold-light: #c9a84c;
+  --gold-dark: #7a5a1a;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a5a;
+  --text-muted: #8a8a9a;
+  --text-arabic: #1a1208;
+  --border: #e0ddd5;
+  --border-light: #d0cdc5;
+  --green: #2d6a2d;
+  --green-active: #3a8a3a;
+  --green-bg: #e8f5e8;
+}
+
+[data-theme="sepia"] {
+  --bg-primary: #f4ede2;
+  --bg-secondary: #ede3d6;
+  --bg-tertiary: #e5d9c8;
+  --bg-card: #f0e8da;
+  --bg-hover: #e0d4c0;
+  --gold: #8b6914;
+  --gold-light: #c9a84c;
+  --gold-dark: #6a5010;
+  --text-primary: #3a2e1e;
+  --text-secondary: #6a5a3a;
+  --text-muted: #9a8a6a;
+  --text-arabic: #2a1e0e;
+  --border: #d0c4a8;
+  --border-light: #c0b498;
+  --green: #5a6a2d;
+  --green-active: #7a9a3a;
+  --green-bg: #e8f0d8;
 }
 
 * {
@@ -25,12 +76,12 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -45,8 +96,16 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--gold);
 }
+/* .arabic-text {
+  font-feature-settings: "calt", "liga", "kern";
+  text-rendering: optimizeLegibility;
+} */
 
-/* Arabic text rendering */
+/* Light theme for better photo match */
+[data-theme="light"] {
+  --bg-primary: #faf9f5;
+  --bg-secondary: #ffffff;
+}
 .arabic-text {
   direction: rtl;
   unicode-bidi: bidi-override;
@@ -57,18 +116,6 @@ body {
   letter-spacing: 0.02em;
 }
 
-/* Surah divider */
-.bismillah {
-  font-family: 'KFGQPC Uthmanic Script', 'Scheherazade New', serif;
-  direction: rtl;
-  text-align: center;
-  font-size: 2rem;
-  color: var(--gold-light);
-  padding: 1.5rem;
-  line-height: 2;
-}
-
-/* Gold gradient text */
 .gold-text {
   background: linear-gradient(135deg, #c9a84c, #e2c37a, #c9a84c);
   -webkit-background-clip: text;
@@ -76,85 +123,6 @@ body {
   background-clip: text;
 }
 
-/* Verse number badge */
-.verse-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #1e2a42, #2a3655);
-  border: 1px solid var(--gold);
-  color: var(--gold-light);
-  font-size: 0.75rem;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-/* Sidebar transitions */
-.sidebar-enter {
-  transform: translateX(-100%);
-}
-
-.sidebar-enter-active {
-  transform: translateX(0);
-  transition: transform 0.3s ease-out;
-}
-
-/* Highlight search matches */
-.search-highlight {
-  background: rgba(201, 168, 76, 0.3);
-  color: var(--gold-light);
-  padding: 0 2px;
-  border-radius: 2px;
-}
-
-/* Audio progress bar */
-.audio-progress {
-  -webkit-appearance: none;
-  appearance: none;
-  background: var(--border);
-  border-radius: 4px;
-  height: 4px;
-  outline: none;
-  cursor: pointer;
-}
-
-.audio-progress::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--gold);
-  cursor: pointer;
-  box-shadow: 0 0 4px rgba(201, 168, 76, 0.5);
-}
-
-/* Page transition */
-@keyframes pageIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.page-enter {
-  animation: pageIn 0.25s ease-out;
-}
-
-/* Responsive sidebar overlay */
-.sidebar-overlay {
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(2px);
-}
-
-/* Playing animation */
 @keyframes soundwave {
 
   0%,
@@ -184,4 +152,24 @@ body {
 
 .soundwave-bar:nth-child(4) {
   animation-delay: 0.3s;
+}
+
+/* Range input */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(201, 168, 76, 0.4);
 }

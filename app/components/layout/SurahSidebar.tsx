@@ -1,123 +1,222 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { X } from "lucide-react";
-import { clsx } from "clsx";
+import { Search } from "lucide-react";
 import { Surah } from "@/app/types";
 
-
 interface SurahSidebarProps {
-  surahs: Surah[];
-  isOpen: boolean;
-  onClose: () => void;
+  surahId: number;
+  allSurahs: Surah[];
+  mobileSidebar: boolean;
+  setMobileSidebar: (v: boolean) => void;
+  sidebarTab: "surah" | "juz" | "page";
+  setSidebarTab: (t: "surah" | "juz" | "page") => void;
+  surahFilter: string;
+  setSurahFilter: (v: string) => void;
 }
 
-export function SurahSidebar({ surahs, isOpen, onClose }: SurahSidebarProps) {
-  const pathname = usePathname();
-  const [filter, setFilter] = useState("");
-  const activeSurahId = pathname.match(/\/surah\/(\d+)/)?.[1];
-
-  const filtered = filter
-    ? surahs.filter(
+export function SurahSidebar({
+  surahId,
+  allSurahs,
+  mobileSidebar,
+  setMobileSidebar,
+  sidebarTab,
+  setSidebarTab,
+  surahFilter,
+  setSurahFilter,
+}: SurahSidebarProps) {
+  const filteredSurahs = surahFilter
+    ? allSurahs.filter(
         (s) =>
-          s.transliteration.toLowerCase().includes(filter.toLowerCase()) ||
-          s.translation.toLowerCase().includes(filter.toLowerCase()) ||
-          String(s.id).includes(filter)
+          s.transliteration.toLowerCase().includes(surahFilter.toLowerCase()) ||
+          s.translation.toLowerCase().includes(surahFilter.toLowerCase()) ||
+          String(s.id).includes(surahFilter)
       )
-    : surahs;
-
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [isOpen]);
+    : allSurahs;
 
   return (
     <>
-      {isOpen && <div className="fixed inset-0 z-30 sidebar-overlay md:hidden" onClick={onClose} />}
+      {/* Mobile overlay */}
+      {mobileSidebar && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 md:hidden"
+          onClick={() => setMobileSidebar(false)}
+        />
+      )}
 
-      <aside className={clsx(
-        "fixed top-0 z-40 h-full w-72 bg-bg-secondary border-r border-border flex flex-col transition-transform duration-300",
-        "md:left-14",
-        isOpen ? "left-0 translate-x-0" : "-translate-x-full md:translate-x-0"
-      )}>
-        <div className="flex items-center justify-between px-4 py-4 border-b border-border">
-          <div>
-            <h2 className="text-sm font-semibold text-text-primary">Surah List</h2>
-            <p className="text-xs text-text-muted">114 Surahs</p>
+      <aside
+        className="flex flex-col w-[240px] flex-shrink-0 z-40 fixed md:relative top-0 left-0 h-full transition-transform duration-300"
+        style={{
+          background: "var(--bg-secondary)",
+          borderRight: "1px solid var(--border)",
+          transform: mobileSidebar ? "translateX(0)" : undefined,
+        }}
+      >
+        <style>{`
+          @media (max-width: 767px) {
+            aside.surah-aside {
+              transform: ${mobileSidebar ? "translateX(0)" : "translateX(-100%)"};
+            }
+          }
+        `}</style>
+
+        {/* Tabs */}
+        <div
+          className="flex border-b flex-shrink-0"
+          style={{ borderColor: "var(--border)" }}
+        >
+          {(["surah", "juz", "page"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setSidebarTab(tab)}
+              className="flex-1 py-3 text-xs font-semibold capitalize transition"
+              style={{
+                color: sidebarTab === tab ? "var(--gold)" : "var(--text-muted)",
+                borderBottom:
+                  sidebarTab === tab
+                    ? "2px solid var(--gold)"
+                    : "2px solid transparent",
+                fontSize: "13px",
+              }}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        {/* Search input */}
+        <div
+          className="px-3 py-2.5 border-b flex-shrink-0"
+          style={{ borderColor: "var(--border)" }}
+        >
+          <div
+            className="flex items-center gap-2 px-3 py-2 rounded-lg"
+            style={{
+              background: "var(--bg-primary)",
+              border: "1px solid var(--border)",
+            }}
+          >
+            <Search size={13} style={{ color: "var(--text-muted)" }} />
+            <input
+              value={surahFilter}
+              onChange={(e) => setSurahFilter(e.target.value)}
+              placeholder="Search Surah"
+              className="flex-1 bg-transparent text-sm outline-none"
+              style={{ color: "var(--text-primary)", fontSize: "13px" }}
+            />
           </div>
-          <button onClick={onClose} className="md:hidden w-7 h-7 flex items-center justify-center rounded text-text-muted hover:text-text-primary hover:bg-bg-hover transition">
-            <X size={16} />
-          </button>
         </div>
 
-        <div className="px-3 py-2 border-b border-border">
-          <input
-            type="text"
-            placeholder="Search Surah..."
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="w-full bg-bg-primary border border-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-gold/50 transition"
-          />
-        </div>
-
-        <div className="flex-1 overflow-y-auto">
-          {filtered.map((surah) => {
-            const isActive = String(surah.id) === activeSurahId;
-            return (
-              <Link
-                key={surah.id}
-                href={`/surah/${surah.id}`}
-                onClick={onClose}
-                className={clsx(
-                  "flex items-center gap-3 px-4 py-3 border-b border-border/40 transition-all duration-150 group",
-                  isActive ? "bg-gold/10 border-l-2 border-l-gold" : "hover:bg-bg-hover"
-                )}
-              >
-                <div className={clsx(
-                  "w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 transition-colors",
-                  isActive ? "bg-gold text-bg-primary" : "bg-bg-tertiary text-text-muted group-hover:text-gold group-hover:bg-gold/10"
-                )}>
-                  {surah.id}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <span className={clsx("text-sm font-medium truncate", isActive ? "text-gold" : "text-text-primary")}>
-                      {surah.transliteration}
+        {/* Surah list */}
+        {sidebarTab === "surah" && (
+          <div
+            className="flex-1 overflow-y-auto"
+            style={{ scrollbarWidth: "thin", scrollbarColor: "var(--border) transparent" }}
+          >
+            {filteredSurahs.map((s) => {
+              const active = s.id === surahId;
+              return (
+                <Link
+                  key={s.id}
+                  href={`/surah/${s.id}`}
+                  onClick={() => setMobileSidebar(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 border-b transition"
+                  style={{
+                    borderColor: "rgba(128,128,128,0.15)",
+                    background: active ? "var(--green-bg)" : "",
+                    borderLeft: active
+                      ? "3px solid var(--green)"
+                      : "3px solid transparent",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active)
+                      (e.currentTarget as HTMLElement).style.background =
+                        "var(--bg-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active)
+                      (e.currentTarget as HTMLElement).style.background = "";
+                  }}
+                >
+                  {/* Diamond shape surah number — ছবির মতো */}
+                  <div
+                    className="flex-shrink-0 relative flex items-center justify-center"
+                    style={{ width: "32px", height: "32px" }}
+                  >
+                    <svg
+                      viewBox="0 0 32 32"
+                      width="32"
+                      height="32"
+                      className="absolute inset-0"
+                    >
+                      <rect
+                        x="4"
+                        y="4"
+                        width="24"
+                        height="24"
+                        rx="6"
+                        transform="rotate(45 16 16)"
+                        fill={active ? "var(--green)" : "var(--bg-tertiary)"}
+                      />
+                    </svg>
+                    <span
+                      className="relative z-10 font-bold"
+                      style={{
+                        color: active ? "#fff" : "var(--text-muted)",
+                        fontSize: "11px",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {s.id}
                     </span>
-                    <span className="text-xs text-text-muted ml-1">{surah.total_verses}v</span>
                   </div>
-                  <div className="flex items-center justify-between mt-0.5">
-                    <span className="text-xs text-text-muted truncate">{surah.translation}</span>
-                    <span className={clsx(
-                      "text-xs px-1.5 py-0.5 rounded ml-1 flex-shrink-0",
-                      surah.type === "meccan" ? "bg-amber-900/30 text-amber-400" : "bg-blue-900/30 text-blue-400"
-                    )}>
-                      {surah.type === "meccan" ? "Mak" : "Mad"}
-                    </span>
+
+                  <div className="flex-1 min-w-0">
+                    <div
+                      className="font-semibold truncate"
+                      style={{
+                        color: active ? "var(--green-active)" : "var(--text-primary)",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {s.transliteration}
+                    </div>
+                    <div
+                      className="truncate"
+                      style={{ color: "var(--text-muted)", fontSize: "12px" }}
+                    >
+                      {s.translation}
+                    </div>
                   </div>
-                </div>
 
-                <span className="text-base text-right flex-shrink-0" style={{
-                  fontFamily: "'Scheherazade New', serif",
-                  color: isActive ? "var(--gold-light)" : "var(--text-secondary)",
-                  direction: "rtl",
-                  lineHeight: 1.5,
-                }}>
-                  {surah.name}
-                </span>
-              </Link>
-            );
-          })}
+                  <span
+                    dir="rtl"
+                    className="flex-shrink-0"
+                    style={{
+                      fontFamily: "'Scheherazade New',serif",
+                      color: active ? "var(--green-active)" : "var(--text-secondary)",
+                      lineHeight: 2,
+                      fontSize: "15px",
+                    }}
+                  >
+                    {s.name}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        )}
 
-          {filtered.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-12 text-text-muted">
-              <p className="text-sm">No surahs found</p>
-            </div>
-          )}
-        </div>
+        {sidebarTab !== "surah" && (
+          <div
+            className="flex-1 flex items-center justify-center"
+            style={{ color: "var(--text-muted)" }}
+          >
+            <p style={{ fontSize: "13px" }}>
+              {sidebarTab === "juz" ? "Juz" : "Page"} view coming soon
+            </p>
+          </div>
+        )}
       </aside>
     </>
   );

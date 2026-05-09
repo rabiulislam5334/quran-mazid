@@ -1,18 +1,17 @@
 export function SadaqahBanner() {
   return (
-    <section className="relative overflow-hidden bg-[#e8f0e4] py-14 text-center">
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 opacity-10">
-        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-          <path d="M0 120 L0 80 Q120 20 240 80 L240 60 Q280 20 320 60 L320 80 Q440 20 560 80 L560 120Z" fill="#2d6a2d"/>
-          <path d="M700 120 L700 60 Q780 10 860 60 L860 120Z" fill="#2d6a2d"/>
-          <path d="M1000 120 L1000 80 Q1080 30 1160 80 L1160 60 Q1200 20 1240 60 L1240 80 Q1320 30 1400 80 L1400 120Z" fill="#2d6a2d"/>
-        </svg>
+    <section className="relative overflow-hidden bg-white py-20 text-center">
+      {/* Background illustration (মসজিদ/মরুভূমি আর্ট থাকলে এখানে ইমেজ হিসেবে দিতে পারেন) */}
+      <div className="absolute bottom-0 left-0 w-full opacity-20 pointer-events-none">
+         <img src="/footer-art.png" alt="" className="w-full h-auto" /> 
       </div>
-      <div className="relative max-w-md mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-[#1a2e1a] mb-4">
+
+      <div className="relative max-w-4xl mx-auto px-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-[#1a2e1a] mb-8 leading-tight">
           Be part of<br />Sadaqah Jariyah
         </h2>
-        <button className="px-6 py-2.5 bg-[#2d6a2d] text-white text-sm font-semibold rounded-xl hover:bg-[#245224] transition shadow-md">
+        
+        <button className="px-10 py-4 bg-[#2d6a2d] text-white text-lg font-bold rounded-xl hover:bg-[#245224] transition-all shadow-lg hover:shadow-xl active:scale-95">
           I want to support
         </button>
       </div>

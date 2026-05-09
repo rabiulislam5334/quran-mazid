@@ -1,130 +1,176 @@
 "use client";
 
-import { Play, Pause, SkipBack, SkipForward, X, Loader2 } from "lucide-react";
-import { clsx } from "clsx";
+import {
+  Play, Pause, SkipBack, SkipForward, X, MoreHorizontal, Loader2,
+} from "lucide-react";
 
-interface BottomPlayerProps {
-  isPlaying: boolean;
-  isLoading: boolean;
-  currentAyah: { surah: number; verse: number } | null;
+function fmt(s: number) {
+  if (!s || isNaN(s)) return "00:00";
+  return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(
+    Math.floor(s % 60)
+  ).padStart(2, "0")}`;
+}
+
+interface BottomAudioPlayerProps {
+  audio: {
+    isPlaying: boolean;
+    isLoading: boolean;
+    currentAyah: { surah: number; verse: number } | null;
+    duration: number;
+    currentTime: number;
+  };
   surahName: string;
-  currentTime: number;
-  duration: number;
   totalVerses: number;
-  onPlayPause: () => void;
+  onPause: () => void;
+  onPlay: (surah: number, verse: number) => void;
   onStop: () => void;
   onSeek: (time: number) => void;
-  onSkipPrev: () => void;
-  onSkipNext: () => void;
+  onSkipPrev: (surah: number, verse: number) => void;
+  onSkipNext: (surah: number, verse: number, total: number) => void;
 }
 
-function formatTime(sec: number): string {
-  if (!sec || isNaN(sec)) return "00:00";
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
-  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-}
-
-export function BottomPlayer({
-  isPlaying,
-  isLoading,
-  currentAyah,
+export function BottomAudioPlayer({
+  audio,
   surahName,
-  currentTime,
-  duration,
   totalVerses,
-  onPlayPause,
+  onPause,
+  onPlay,
   onStop,
   onSeek,
   onSkipPrev,
   onSkipNext,
-}: BottomPlayerProps) {
-  if (!currentAyah) return null;
-
-  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+}: BottomAudioPlayerProps) {
+  if (!audio.currentAyah) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-bg-secondary border-t border-border shadow-2xl">
+    <div
+      className="fixed bottom-0 left-0 right-0 z-50"
+      style={{
+        background: "var(--bg-secondary)",
+        borderTop: "1px solid var(--border)",
+        boxShadow: "0 -4px 20px rgba(0,0,0,0.12)",
+      }}
+    >
       {/* Progress bar */}
-      <div className="relative h-1 bg-border cursor-pointer group" onClick={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const ratio = (e.clientX - rect.left) / rect.width;
-        onSeek(ratio * duration);
-      }}>
+      <div
+        className="h-1 w-full cursor-pointer relative"
+        style={{ background: "var(--border)" }}
+        onClick={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          onSeek(((e.clientX - r.left) / r.width) * audio.duration);
+        }}
+      >
         <div
-          className="absolute left-0 top-0 h-full bg-gold transition-all"
-          style={{ width: `${progress}%` }}
-        />
-        <div
-          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-gold opacity-0 group-hover:opacity-100 transition-opacity shadow"
-          style={{ left: `calc(${progress}% - 6px)` }}
+          className="h-full transition-all duration-150"
+          style={{
+            width: `${
+              audio.duration > 0
+                ? (audio.currentTime / audio.duration) * 100
+                : 0
+            }%`,
+            background: "var(--green)",
+          }}
         />
       </div>
 
-      <div className="flex items-center gap-3 px-4 py-2.5 md:px-6">
-        {/* Surah + verse info */}
-        <div className="flex items-center gap-2 min-w-0 flex-1">
-          <div className="w-8 h-8 rounded-lg bg-gold/20 border border-gold/30 flex items-center justify-center flex-shrink-0">
-            <span className="text-gold text-xs font-bold">{currentAyah.surah}</span>
-          </div>
-          <div className="min-w-0">
-            <p className="text-text-primary text-sm font-medium truncate">
-              {surahName} : {currentAyah.verse}
-            </p>
-            <p className="text-text-muted text-xs">{formatTime(currentTime)}</p>
-          </div>
+      <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5">
+        {/* Surah info */}
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <p
+            className="font-semibold truncate"
+            style={{ color: "var(--text-primary)", fontSize: "13px" }}
+          >
+            {surahName} :{" "}
+            <span style={{ color: "var(--green-active)" }}>
+              {audio.currentAyah.verse}
+            </span>
+          </p>
         </div>
 
-        {/* Controls */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onSkipPrev}
-            disabled={currentAyah.verse <= 1}
-            className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:text-text-primary hover:bg-bg-hover transition disabled:opacity-30 disabled:cursor-not-allowed"
-            aria-label="Previous ayah"
-          >
-            <SkipBack size={16} />
-          </button>
+        {/* Time left */}
+        <span
+          className="hidden sm:block tabular-nums"
+          style={{ color: "var(--text-muted)", fontSize: "12px" }}
+        >
+          {fmt(audio.currentTime)}
+        </span>
 
-          <button
-            onClick={onPlayPause}
-            className={clsx(
-              "w-10 h-10 rounded-full flex items-center justify-center transition-all",
-              "bg-gold text-bg-primary hover:bg-gold-light shadow-lg shadow-gold/20"
-            )}
-            aria-label={isPlaying ? "Pause" : "Play"}
-          >
-            {isLoading ? (
-              <Loader2 size={18} className="animate-spin" />
-            ) : isPlaying ? (
-              <Pause size={18} fill="currentColor" />
-            ) : (
-              <Play size={18} fill="currentColor" className="ml-0.5" />
-            )}
-          </button>
+        {/* Dots */}
+        <button
+          className="w-7 h-7 flex items-center justify-center rounded-full"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <MoreHorizontal size={16} />
+        </button>
 
-          <button
-            onClick={onSkipNext}
-            disabled={currentAyah.verse >= totalVerses}
-            className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:text-text-primary hover:bg-bg-hover transition disabled:opacity-30 disabled:cursor-not-allowed"
-            aria-label="Next ayah"
-          >
-            <SkipForward size={16} />
-          </button>
+        {/* Skip prev */}
+        <button
+          onClick={() =>
+            audio.currentAyah &&
+            onSkipPrev(audio.currentAyah.surah, audio.currentAyah.verse)
+          }
+          disabled={audio.currentAyah.verse <= 1}
+          className="w-8 h-8 flex items-center justify-center rounded-full transition disabled:opacity-30"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <SkipBack size={18} fill="currentColor" />
+        </button>
 
-          <button
-            onClick={onStop}
-            className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:text-red-400 hover:bg-bg-hover transition ml-1"
-            aria-label="Stop"
-          >
-            <X size={16} />
-          </button>
-        </div>
+        {/* Play/Pause */}
+        <button
+          onClick={() =>
+            audio.isPlaying
+              ? onPause()
+              : audio.currentAyah &&
+                onPlay(audio.currentAyah.surah, audio.currentAyah.verse)
+          }
+          className="w-11 h-11 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition"
+          style={{ background: "var(--green)", color: "#fff" }}
+        >
+          {audio.isLoading ? (
+            <Loader2 size={20} className="animate-spin" />
+          ) : audio.isPlaying ? (
+            <Pause size={20} fill="currentColor" />
+          ) : (
+            <Play size={20} fill="currentColor" className="ml-0.5" />
+          )}
+        </button>
+
+        {/* Skip next */}
+        <button
+          onClick={() =>
+            audio.currentAyah &&
+            onSkipNext(audio.currentAyah.surah, audio.currentAyah.verse, totalVerses)
+          }
+          disabled={audio.currentAyah.verse >= totalVerses}
+          className="w-8 h-8 flex items-center justify-center rounded-full transition disabled:opacity-30"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <SkipForward size={18} fill="currentColor" />
+        </button>
+
+        {/* Stop */}
+        <button
+          onClick={onStop}
+          className="w-7 h-7 flex items-center justify-center rounded-full transition"
+          style={{ color: "var(--text-muted)" }}
+          onMouseEnter={(e) =>
+            ((e.currentTarget as HTMLElement).style.color = "#f87171")
+          }
+          onMouseLeave={(e) =>
+            ((e.currentTarget as HTMLElement).style.color = "var(--text-muted)")
+          }
+        >
+          <X size={16} />
+        </button>
 
         {/* Duration */}
-        <div className="hidden sm:block text-xs text-text-muted min-w-[40px] text-right">
-          {formatTime(duration)}
-        </div>
+        <span
+          className="hidden sm:block tabular-nums"
+          style={{ color: "var(--text-muted)", fontSize: "12px" }}
+        >
+          {fmt(audio.duration)}
+        </span>
       </div>
     </div>
   );

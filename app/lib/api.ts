@@ -1,6 +1,4 @@
-
-
-import { Surah,SurahWithAyahs, SearchResult } from "../types";
+import { Surah, SurahWithAyahs, SearchResult } from "../types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
@@ -8,21 +6,23 @@ export async function fetchAllSurahs(): Promise<Surah[]> {
   const res = await fetch(`${API_URL}/api/surahs`);
   if (!res.ok) throw new Error("Failed to fetch surahs");
   const json = await res.json();
-  return json.data;
+  // আপনার API সরাসরি Array রিটার্ন করছে, তাই json.data এর প্রয়োজন নেই
+  return Array.isArray(json) ? json : json.data || [];
 }
 
 export async function fetchSurah(id: number): Promise<Surah> {
   const res = await fetch(`${API_URL}/api/surahs/${id}`);
   if (!res.ok) throw new Error(`Failed to fetch surah ${id}`);
   const json = await res.json();
-  return json.data;
+  // সরাসরি json রিটার্ন করা হচ্ছে
+  return json.data || json;
 }
 
 export async function fetchSurahAyahs(id: number): Promise<SurahWithAyahs> {
   const res = await fetch(`${API_URL}/api/surahs/${id}/ayahs`);
   if (!res.ok) throw new Error(`Failed to fetch ayahs for surah ${id}`);
   const json = await res.json();
-  return json.data;
+  return json.data || json;
 }
 
 export async function searchAyahs(
@@ -34,7 +34,12 @@ export async function searchAyahs(
   const res = await fetch(`${API_URL}/api/search?${params}`);
   if (!res.ok) throw new Error("Search failed");
   const json = await res.json();
-  return { data: json.data, total: json.total };
+  
+  // সার্চের ক্ষেত্রে যদি ডাটা র‍্যাপ করা থাকে
+  return { 
+    data: json.data || json.results || [], 
+    total: json.total || (json.data ? json.data.length : 0) 
+  };
 }
 
 const VERSE_COUNTS: number[] = [
@@ -49,7 +54,9 @@ const VERSE_COUNTS: number[] = [
 
 export function getAudioUrl(surahId: number, verseNum: number): string {
   let globalNum = 0;
-  for (let i = 0; i < surahId - 1; i++) globalNum += VERSE_COUNTS[i] ?? 0;
+  for (let i = 0; i < surahId - 1; i++) {
+    globalNum += VERSE_COUNTS[i] ?? 0;
+  }
   globalNum += verseNum;
   return `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${globalNum}.mp3`;
 }

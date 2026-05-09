@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 
 const AYAH_TICKER = [
@@ -13,18 +12,20 @@ export function AyahTicker() {
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setIdx((i) => (i + 1) % AYAH_TICKER.length), 4000);
+    const t = setInterval(() => setIdx((i) => (i + 1) % AYAH_TICKER.length), 5000);
     return () => clearInterval(t);
   }, []);
 
   const ticker = AYAH_TICKER[idx];
 
   return (
-    <div className="min-h-[72px] flex flex-col items-center justify-center mb-10">
-      <p className="text-sm text-[#3a5a3a] max-w-sm text-center leading-relaxed transition-all duration-500">
-        {ticker.text}
+    <div className="min-h-[120px] flex flex-col items-center justify-center my-10 px-4">
+      <p className="text-lg md:text-xl text-[#3a5a3a] max-w-3xl text-center font-medium leading-relaxed italic transition-all duration-700 ease-in-out">
+        "{ticker.text}"
       </p>
-      <p className="text-xs text-[#5a7a5a] mt-1">[ {ticker.ref} ]</p>
+      <p className="text-sm md:text-base text-[#5a7a5a] mt-3 font-semibold tracking-widest uppercase">
+        [ {ticker.ref} ]
+      </p>
     </div>
   );
 }
