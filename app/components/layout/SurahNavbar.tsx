@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  BookOpen, Search, Sun, Moon, Book, Settings, ChevronLeft, ChevronRight,
+  BookOpen, Search, Sun, Moon, Book, Settings, ChevronLeft, ChevronRight, Heart
 } from "lucide-react";
 import { Theme } from "@/app/hooks/useTheme";
 
@@ -19,10 +19,10 @@ interface SurahNavbarProps {
 }
 
 const THEMES: { id: Theme; label: string; icon: React.ReactNode }[] = [
-  { id: "light", label: "Light", icon: <Sun size={14} /> },
-  { id: "dark", label: "Dark", icon: <Moon size={14} /> },
-  { id: "sepia", label: "Sepia", icon: <Book size={14} /> },
-  { id: "system", label: "System", icon: <Settings size={14} /> },
+  { id: "light", label: "Light", icon: <Sun size={16} /> },
+  { id: "dark", label: "Dark", icon: <Moon size={16} /> },
+  { id: "sepia", label: "Sepia", icon: <Book size={16} /> },
+  { id: "system", label: "System", icon: <Settings size={16} /> },
 ];
 
 export function SurahNavbar({
@@ -38,19 +38,11 @@ export function SurahNavbar({
   const [visible, setVisible] = useState(true);
   const [themeMenuOpen, setThemeMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
-  const scrollContainer = useRef<HTMLElement | null>(null);
 
-  // Find the scrollable parent (main content div)
   useEffect(() => {
-    // We'll use window scroll or the closest scroll parent
-    const mainEl = document.getElementById("surah-scroll-area");
-    scrollContainer.current = mainEl;
-
-    const target = mainEl || window;
-
     const handleScroll = () => {
-      const currentY = mainEl ? mainEl.scrollTop : window.scrollY;
-      if (currentY > lastScrollY.current && currentY > 60) {
+      const currentY = window.scrollY;
+      if (currentY > lastScrollY.current && currentY > 80) {
         setVisible(false);
       } else {
         setVisible(true);
@@ -58,141 +50,76 @@ export function SurahNavbar({
       lastScrollY.current = currentY;
     };
 
-    target.addEventListener("scroll", handleScroll, { passive: true });
-    return () => target.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const themeIcon =
-    theme === "light" ? (
-      <Sun size={16} />
-    ) : theme === "sepia" ? (
-      <Book size={16} />
-    ) : (
-      <Moon size={16} />
-    );
+    theme === "light" ? <Sun size={20} /> : 
+    theme === "sepia" ? <Book size={20} /> : <Moon size={20} />;
 
   return (
     <nav
-      className="sticky top-0 z-30 flex items-center justify-between px-3 md:px-6 py-2.5 border-b transition-transform duration-300"
+      className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-3 border-b transition-all duration-300"
       style={{
-        background: "var(--bg-secondary)",
+        background: "#FFFFFF",
         borderColor: "var(--border)",
         transform: visible ? "translateY(0)" : "translateY(-100%)",
-        backdropFilter: "blur(8px)",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.02)"
       }}
     >
-      {/* Left: mobile sidebar + surah name */}
-      <div className="flex items-center gap-2">
+      {/* Left: Logo & Surah Info */}
+      <div className="flex items-center gap-4 md:gap-8">
+        {/* Brand Section (As per your image) */}
+        <Link href="/" className="hidden lg:block group">
+          <h1 className="text-2xl font-black tracking-tight leading-none" style={{ color: "var(--text-primary)" }}>
+            Quran Mazid
+          </h1>
+          <p className="text-[11px] font-medium mt-1 opacity-60" style={{ color: "var(--text-muted)" }}>
+            Read, Study, and Learn The Quran
+          </p>
+        </Link>
+
+        {/* Mobile Menu Toggle */}
         <button
           onClick={onMobileSidebar}
-          className="md:hidden w-8 h-8 flex items-center justify-center rounded-lg transition"
-          style={{ color: "var(--text-muted)" }}
-          onMouseEnter={(e) =>
-            ((e.currentTarget as HTMLElement).style.background = "var(--bg-hover)")
-          }
-          onMouseLeave={(e) =>
-            ((e.currentTarget as HTMLElement).style.background = "")
-          }
+          className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl transition"
+          style={{ background: "var(--bg-secondary)", color: "var(--text-primary)" }}
         >
-          <BookOpen size={18} />
+          <BookOpen size={22} />
         </button>
 
-        <div className="flex items-center gap-1.5">
-          {prevId && (
-            <Link
-              href={`/surah/${prevId}`}
-              className="hidden sm:flex w-7 h-7 items-center justify-center rounded-lg transition"
-              style={{ color: "var(--text-muted)" }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.background = "var(--bg-hover)")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.background = "")
-              }
-            >
-              <ChevronLeft size={16} />
-            </Link>
-          )}
-
-          <div>
-            <span
-              className="font-bold text-sm md:text-base"
-              style={{ color: "var(--text-primary)" }}
-            >
-              {surahName}
-            </span>
-            <span
-              className="hidden sm:inline ml-2 text-xs"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Surah {surahId}
-            </span>
-          </div>
-
-          {nextId && (
-            <Link
-              href={`/surah/${nextId}`}
-              className="hidden sm:flex w-7 h-7 items-center justify-center rounded-lg transition"
-              style={{ color: "var(--text-muted)" }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.background = "var(--bg-hover)")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.background = "")
-              }
-            >
-              <ChevronRight size={16} />
-            </Link>
-          )}
-        </div>
+        {/* Surah Navigation Details */}
+       
       </div>
 
-      {/* Right: search + theme */}
-      <div className="flex items-center gap-1">
+      {/* Right Actions */}
+      <div className="flex items-center gap-2 md:gap-4">
+        {/* Search */}
         <button
           onClick={onSearchOpen}
-          className="w-8 h-8 flex items-center justify-center rounded-lg transition"
-          style={{ color: "var(--text-muted)" }}
-          title="Search (Ctrl+K)"
-          onMouseEnter={(e) =>
-            ((e.currentTarget as HTMLElement).style.background = "var(--bg-hover)")
-          }
-          onMouseLeave={(e) =>
-            ((e.currentTarget as HTMLElement).style.background = "")
-          }
+          className="w-10 h-10 flex items-center justify-center rounded-full transition-all hover:scale-105"
+          style={{ background: "var(--bg-secondary)", color: "var(--text-muted)" }}
         >
-          <Search size={17} />
+          <Search size={20} />
         </button>
 
-        {/* Theme */}
+        {/* Theme Toggler */}
         <div className="relative">
           <button
             onClick={() => setThemeMenuOpen((p) => !p)}
-            title="Theme"
-            className="w-8 h-8 flex items-center justify-center rounded-lg transition"
-            style={{ color: "var(--gold)" }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLElement).style.background = "var(--bg-hover)")
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLElement).style.background = "")
-            }
+            className="w-10 h-10 flex items-center justify-center rounded-full transition-all hover:scale-105"
+            style={{ background: "var(--bg-secondary)", color: "var(--gold)" }}
           >
             {themeIcon}
           </button>
 
           {themeMenuOpen && (
             <>
+              <div className="fixed inset-0 z-40" onClick={() => setThemeMenuOpen(false)} />
               <div
-                className="fixed inset-0 z-40"
-                onClick={() => setThemeMenuOpen(false)}
-              />
-              <div
-                className="absolute right-0 top-full mt-1 rounded-xl shadow-2xl z-50 overflow-hidden min-w-[130px]"
-                style={{
-                  background: "var(--bg-secondary)",
-                  border: "1px solid var(--border)",
-                }}
+                className="absolute right-0 top-full mt-3 rounded-2xl shadow-2xl z-50 overflow-hidden min-w-[150px] p-1 border"
+                style={{ background: "var(--bg-primary)", borderColor: "var(--border)" }}
               >
                 {THEMES.map((t) => (
                   <button
@@ -201,19 +128,11 @@ export function SurahNavbar({
                       setTheme(t.id);
                       setThemeMenuOpen(false);
                     }}
-                    className="flex items-center gap-2.5 w-full px-3 py-2.5 text-sm transition text-left"
+                    className="flex items-center gap-3 w-full px-4 py-3 text-sm font-medium rounded-xl transition-all"
                     style={{
-                      color: theme === t.id ? "var(--gold)" : "var(--text-secondary)",
-                      background: theme === t.id ? "var(--bg-hover)" : "",
+                      color: theme === t.id ? "var(--green)" : "var(--text-primary)",
+                      background: theme === t.id ? "var(--bg-hover)" : "transparent",
                     }}
-                    onMouseEnter={(e) =>
-                      ((e.currentTarget as HTMLElement).style.background =
-                        "var(--bg-hover)")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.currentTarget as HTMLElement).style.background =
-                        theme === t.id ? "var(--bg-hover)" : "")
-                    }
                   >
                     {t.icon}
                     {t.label}
@@ -224,21 +143,12 @@ export function SurahNavbar({
           )}
         </div>
 
-        {/* Support Us - desktop only */}
+        {/* Support Us Button (Styled like the image) */}
         <button
-          className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition ml-1"
-          style={{
-            background: "var(--green)",
-            color: "#fff",
-          }}
-          onMouseEnter={(e) =>
-            ((e.currentTarget as HTMLElement).style.opacity = "0.85")
-          }
-          onMouseLeave={(e) =>
-            ((e.currentTarget as HTMLElement).style.opacity = "1")
-          }
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all hover:shadow-lg active:scale-95"
+          style={{ background: "var(--green)", color: "#fff" }}
         >
-          ❤ Support Us
+          Support Us <Heart size={16} fill="white" />
         </button>
       </div>
     </nav>
