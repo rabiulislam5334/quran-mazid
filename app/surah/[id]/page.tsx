@@ -129,13 +129,12 @@ export default function SurahPage() {
         surahs={allSurahs} 
       />
 
-      {/* ২. আইকন সাইডবার (Desktop Only) */}
+      {/* (Desktop Only) */}
       <div className="sticky top-0 h-screen shrink-0 hidden md:block">
         <IconSidebar surahId={surahId} theme={theme} setTheme={setTheme} />
       </div>
 
       <div className="flex flex-col flex-1 min-w-0">
-        {/* ৩. নেভবার - onMobileSidebar প্রপসটি এখানে কাজ করবে */}
         <SurahNavbar
           surahName={surahName}
           surahId={surahId}
@@ -157,14 +156,11 @@ export default function SurahPage() {
       setMobileSidebar={setMobileSidebar}
       sidebarTab={sidebarTab}
       setSidebarTab={setSidebarTab}
-      surahFilter={surahFilter}
-      setSurahFilter={setSurahFilter}
-    
       onGlobalSearchClick={() => setSearchOpen(true)} 
   />
 </aside>
 
-          {/* ৫. মেইন কন্টেন্ট */}
+          {/* main content*/}
           <main className="flex-1 min-w-0" style={{ borderColor: "var(--border)" }}>
             <div className="pb-32"> 
               {loading ? (
@@ -201,7 +197,7 @@ export default function SurahPage() {
                     ))}
                   </div>
 
-                  {/* নেভিগেশন বাটন */}
+                  {/* nav btn */}
                   <div className="flex items-center justify-between px-6 py-10 max-w-5xl mx-auto w-full">
                     {prevId ? (
                       <Link href={`/surah/${prevId}`} className="flex items-center gap-2 px-4 py-2 rounded-xl border hover:bg-gray-50 dark:hover:bg-white/5 transition">
@@ -234,7 +230,7 @@ export default function SurahPage() {
         </div>
       </div>
 
-      {/* ৭. অডিও প্লেয়ার */}
+      {/* Audio player */}
       <div className="fixed bottom-0 left-0 right-0 z-50">
         <BottomAudioPlayer
             audio={audio}
